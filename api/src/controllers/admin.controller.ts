@@ -29,6 +29,8 @@ export const registerAdmin = async (req: Request, res: Response) => {
 export const loginAdmin = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
+  console.log(email, password);
+
   try {
     const admin = await findAdminByEmail(email);
     if (!admin) {
@@ -42,8 +44,7 @@ export const loginAdmin = async (req: Request, res: Response) => {
        return;
     }
 
-    const token = jwt.sign({ id: admin.id, email: admin.email }, JWT_SECRET, { expiresIn: "1h" });
-
+    const token = jwt.sign({ id: admin.id, email: admin.email }, JWT_SECRET, { expiresIn: "5h" });
     res.status(200).json({ message: "Login successful", token });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });

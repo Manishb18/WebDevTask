@@ -4,7 +4,7 @@ import pool from "../config/db";
 // Fetch all categories (Public)
 export const getAllCategories = async (req: Request, res: Response) => {
   try {
-    const query = "SELECT * FROM categories ORDER BY created_at DESC;";
+    const query = "SELECT * FROM categories ORDER BY created_at ASC;";
     const result = await pool.query(query);
     res.status(200).json(result.rows);
   } catch (error) {

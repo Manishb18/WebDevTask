@@ -6,6 +6,8 @@ export class BlogModel {
       CREATE TABLE IF NOT EXISTS blogs (
         id SERIAL PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
+        description VARCHAR(255) NOT NULL,
+        bannerImage VARCHAR(255) NOT NULL,
         sections JSONB NOT NULL,
         category_id INTEGER NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
         author_id INTEGER NOT NULL REFERENCES admins(id) ON DELETE CASCADE,

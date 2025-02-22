@@ -5,12 +5,12 @@ import { getAllBlogs, createBlog, updateBlog, deleteBlog } from "../controllers/
 
 const router = express.Router();
 
-// Public route
+// Public route - Fetch all blogs
 router.get("/", getAllBlogs);
 
 // Admin protected routes
-router.post("/", adminAuthMiddleware, upload.single("image"), createBlog);
-router.put("/:id", adminAuthMiddleware, upload.single("image"), updateBlog);
+router.post("/", adminAuthMiddleware, upload.fields([{ name: "bannerImage", maxCount: 1 }, { name: "sectionImages", maxCount: 10 }]), createBlog);
+router.put("/:id", adminAuthMiddleware, upload.fields([{ name: "bannerImage", maxCount: 1 }, { name: "sectionImages", maxCount: 10 }]), updateBlog);
 router.delete("/:id", adminAuthMiddleware, deleteBlog);
 
 export default router;
