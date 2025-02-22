@@ -29,7 +29,7 @@ export default function Navbar() {
 
   // Exclude layout for admin routes
   if (pathname.startsWith('/admin')) {
-    return <></>; // No layout for /admin
+    return <></>; 
   }
 
   const resetFilters = () => {
