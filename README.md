@@ -9,7 +9,7 @@ Backend hosted on render.com
 
 admin login credentials :
 
-email : admin@gmail.com
+email : admin1@gmail.com
 
 password : admin@123
 
