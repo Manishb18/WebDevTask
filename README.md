@@ -4,9 +4,13 @@
 The development of a fully functional blog management website has been successfully completed. This website allows public users to browse blog posts while enabling an admin to dynamically add, edit, and delete blog content.
 
 Frontend hosted on vercel : https://web-dev-task-teal.vercel.app/
+
 Backend hosted on render.com
+
 admin login credentials :
+
 email : admin@gmail.com
+
 password : admin@123
 
 ## Tech Stack
