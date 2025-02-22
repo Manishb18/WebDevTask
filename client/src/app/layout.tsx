@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import NavBar from "./components/NavBar";
 import Providers from "./providers";
-
+import { AuroraBackground } from "@/components/ui/aurora-background";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -25,15 +25,20 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-        <NavBar/>
-        {children}
+          <AuroraBackground>
+            <div className="relative z-10">
+              <NavBar />
+            </div>
+            <div className="relative z-0">
+              {children}
+            </div>
+          </AuroraBackground>
         </Providers>
       </body>
     </html>

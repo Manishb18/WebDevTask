@@ -2,41 +2,24 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Menu, X, Sun, Moon, ChevronDown } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useTheme } from "next-themes";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useBlogContext } from "../BlogContext";
 
-const categories = {
-  DSA: [
-    "Getting Started",
-    "Array",
-    "Linked List",
-    "Greedy Algorithm",
-    "Recursion",
-    "Binary Search",
-    "Stack and Queue",
-    "String",
-    "Binary Tree",
-  ],
-  JavaScript: ["Basics", "ES6+", "Closures", "Async/Await", "Prototypes"],
-  ReactJS: [
-    "Components",
-    "State & Props",
-    "Hooks",
-    "Context API",
-    "Performance Optimization",
-  ],
-  NextJS: ["SSR & SSG", "Routing", "API Routes", "Middleware"],
-};
+interface Category {
+  id: string;
+  name: string;
+}
 
 export default function Navbar() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const { searchQuery, setSearchQuery, categories, selectedCategoryId, setSelectedCategoryId } = useBlogContext();
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -49,11 +32,20 @@ export default function Navbar() {
     return <></>; // No layout for /admin
   }
 
+  const resetFilters = () => {
+    setSearchQuery("");
+    setSelectedCategoryId(null);
+    router.push('/');
+  };
+
   return (
-    <nav className="flex justify-between items-center py-4 px-6 bg-gray-200 dark:bg-black text-black dark:text-white">
+    <nav className="flex justify-between items-center py-3 px-6  text-black dark:text-white border-b border-gray-600">
       {/* Website Name */}
-      <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 italic">
-        InterviewPro
+      <h1
+        className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 italic cursor-pointer"
+        onClick={resetFilters}
+      >
+        Blogger Pro
       </h1>
 
       {/* Mobile Menu Button */}
@@ -70,14 +62,19 @@ export default function Navbar() {
 
       {/* Desktop Categories and Search Bar */}
       <div className="hidden md:flex space-x-6 items-center">
-        {Object.keys(categories).map((category, index) => (
-          <a
+        {Array.isArray(categories) && categories.map((category: Category, index : number) => (
+          <div
             key={index}
-            href={`#${category.toLowerCase()}`}
-            className="hover:text-gray-500 dark:hover:text-gray-300"
+            className={cn(
+              "hover:text-gray-500 dark:hover:text-gray-300 cursor-pointer px-2 py-1 rounded",
+              selectedCategoryId === category.id
+                ? "bg-gray-300 dark:bg-gray-700 text-black dark:text-white"
+                : ""
+            )}
+            onClick={() => setSelectedCategoryId(category.id)}
           >
-            {category}
-          </a>
+            {category.name}
+          </div>
         ))}
       </div>
 
@@ -87,6 +84,8 @@ export default function Navbar() {
           <Input
             type="text"
             placeholder="Search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full my-4 bg-gray-800 text-white border-none"
           />
           <button
@@ -116,8 +115,11 @@ export default function Navbar() {
         >
           {/* Close Button */}
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 italic">
-              InterviewPro
+            <h1
+              className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 italic cursor-pointer"
+              onClick={resetFilters}
+            >
+              Blogger Pro
             </h1>
             <button onClick={() => setMobileMenuOpen(false)}>
               <X className="w-6 h-6" />
@@ -128,6 +130,8 @@ export default function Navbar() {
           <Input
             type="text"
             placeholder="Search documentation..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className={cn(
               "w-full my-4 border-none",
               theme === "dark"
@@ -136,40 +140,19 @@ export default function Navbar() {
             )}
           />
 
-          {/* Categories Dropdown */}
-          {Object.entries(categories).map(([category, subcategories]) => (
-            <div key={category} className="mb-4">
-              <button
-                className="flex justify-between w-full p-2 text-left text-lg font-medium rounded-md"
-                onClick={() =>
-                  setExpandedCategory(
-                    expandedCategory === category ? null : category
-                  )
-                }
-              >
-                {category}
-                <ChevronDown
-                  className={cn(
-                    "w-4 h-4 transition-transform",
-                    expandedCategory === category && "rotate-180"
-                  )}
-                />
-              </button>
-              {expandedCategory === category && (
-                <motion.ul
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="ml-4 mt-2 space-y-1 text-gray-300"
-                >
-                  {subcategories.map((sub, i) => (
-                    <li key={i} className="p-2 rounded-md cursor-pointer">
-                      {sub}
-                    </li>
-                  ))}
-                </motion.ul>
+          {/* Categories */}
+          {Array.isArray(categories) && categories && categories.map((category: Category, index : number) => (
+            <div
+              key={index}
+              className={cn(
+                "mb-4 p-2 text-left text-lg font-medium rounded-md cursor-pointer",
+                selectedCategoryId === category.id
+                  ? "bg-gray-300 dark:bg-gray-700 text-black dark:text-white"
+                  : ""
               )}
+              onClick={() => setSelectedCategoryId(category.id)}
+            >
+              {category.name}
             </div>
           ))}
 

@@ -30,7 +30,7 @@ const Header: React.FC<HeaderProps> = ({ search, setSearch, setCategory }) => {
   }, []);
 
   return (
-    <header className="flex justify-between items-center p-4 bg-black border-b border-gray-300">
+    <header className="flex justify-between items-center p-4  border-b border-gray-300">
       <div className="w-full max-w-xl">
         <Input
           type="text"
